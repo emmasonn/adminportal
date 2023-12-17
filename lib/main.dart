@@ -24,7 +24,7 @@ class AdminPortalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // final themeManager = context.watch<ThemeManager>();
     return MaterialApp.router(
-      title: AppStrings.appName,
+      title: AppStrings.appNameTxt,
       debugShowCheckedModeBanner: false,
       locale: const Locale('en'),
       theme: AppTheme.fromType(ThemeType.none).toThemeData(),

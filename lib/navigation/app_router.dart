@@ -1,4 +1,5 @@
 import 'package:adminportal/main.dart';
+import 'package:adminportal/navigation/app_routes.dart';
 import 'package:adminportal/navigation/app_screen_paths.dart';
 import 'package:adminportal/navigation/navigation_error_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,9 @@ class AppRouter {
       errorMsg: state.error?.message,
     ),
     routes: <RouteBase>[
-      
+      AppRoutes.splashScreen,
+      AppRoutes.authScreen,
+      AppRoutes.mainScaffoldScreen,
     ],
   );
 }

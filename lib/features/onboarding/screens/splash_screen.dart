@@ -1,7 +1,12 @@
 import 'package:adminportal/core/animation/fade_animation_ex.dart';
+import 'package:adminportal/navigation/app_screen_paths.dart';
 import 'package:adminportal/navigation/custom_page_transition.dart';
 import 'package:adminportal/resources/app_assets.dart';
+import 'package:adminportal/resources/app_colors.dart';
+import 'package:adminportal/resources/app_strings.dart';
+import 'package:adminportal/resources/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,12 +34,20 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _logoAnimController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 3));
+    _logoAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(seconds: 2), () {
         _logoAnimController.forward();
+      });
+      //navigate to auhentication screen after 3 seconds
+      Future.delayed(const Duration(seconds: 4), () {
+        GoRouter.of(context).go(
+          AppScreenPaths.authPath,
+        );
       });
     });
   }
@@ -49,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: AppColors.accent1,
       body: SafeArea(
         bottom: false,
         top: false,
@@ -75,22 +89,34 @@ class _SplashScreenState extends State<SplashScreen>
             FadeAnimationEx(
               animationController: _logoAnimController,
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 200,
-                      width: 150,
-                      child: Image.asset(
-                        AppAssets.adminIconPng,
+                child: Hero(
+                  tag: AppStrings.splashIconTagTxt,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox.square(
+                        dimension: 200,
+                        child: ImageIcon(
+                          AssetImage(AppAssets.adminIconPng),
+                          color: AppColors.onAccent,
+                        ),
                       ),
-                    ),
-                    //vertical spacer
-                    const SizedBox(
-                      height: 5,
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 10.0,
+                          bottom: 20.0,
+                        ),
+                        child: Text(
+                          'Property Expects',
+                          textAlign: TextAlign.center,
+                          style: TextStyles.t1.copyWith(
+                            color: AppColors.onAccent,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
