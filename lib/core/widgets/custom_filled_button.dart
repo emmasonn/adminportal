@@ -33,6 +33,10 @@ class CustomFilledButton extends StatelessWidget {
       width: width,
       child: MaterialButton(
         elevation: 0.0,
+        hoverElevation: 0.0,
+        focusElevation: 0.0,
+        highlightElevation: 0.0,
+        disabledElevation: 0.0,
         color: backgroudColor ?? AppColors.accent1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(

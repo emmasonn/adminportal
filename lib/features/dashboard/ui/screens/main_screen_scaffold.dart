@@ -1,6 +1,6 @@
+import 'package:adminportal/core/utils/enum_constants.dart';
 import 'package:adminportal/core/utils/extension_util.dart';
 import 'package:adminportal/features/dashboard/ui/provider/app_manager.dart';
-import 'package:adminportal/features/dashboard/ui/screens/main_screens.dart';
 import 'package:adminportal/features/dashboard/ui/widgets/main_drawer_widget.dart';
 import 'package:adminportal/navigation/custom_page_transition.dart';
 import 'package:adminportal/resources/app_colors.dart';
@@ -31,8 +31,12 @@ class MainScreenScaffold extends StatefulWidget {
 class _MainScreenScaffoldState extends State<MainScreenScaffold> {
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
     final pageIndex = context.watch<AppManager>();
-    // final theme = Theme.of(context);
+    final theme = Theme.of(context);
+
+    //store screen type
+    MainDrawerScreenTypes pageType = MainDrawerScreenTypes.none;
     ///////////// ////////////////////////
     double leftMenuWidth = Sizes.sideBarSm;
     bool compactMenuMode = true;
@@ -54,79 +58,94 @@ class _MainScreenScaffoldState extends State<MainScreenScaffold> {
     bool showDrawerPanel = !isNarrow;
 
     return Scaffold(
-      drawer: showDrawerPanel
-          ? MainDrawerWidget(compactMode: compactMenuMode)
+      key: scaffoldKey,
+      drawer: !showDrawerPanel
+          ? ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: Sizes.sideBarLg),
+              child: const MainDrawerWidget(),
+            )
           : null,
       body: Stack(
         children: [
+          ///Header =
           AnimatedPositioned(
             duration: Durations.slow,
             curve: Curves.easeOut,
             bottom: 0,
+            left: 0,
+            right: 0,
             top: 0,
-            child: AnimatedOpacity(
-              duration: Durations.slow,
-              opacity: isNarrow ? 1 : 0,
-              curve: Curves.easeOut,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(minWidth: 500),
-                child: Stack(
-                  children: [
-                    //// //////////////////////
-                    /// INNER CONTENT STACK
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 500),
+              child: Stack(
+                children: [
+                  //// //////////////////////
+                  /// INNER CONTENT STACK
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: topBarHeight + topBarPadding,
+                    ),
+                    child: widget.child,
+                    // MainScreen(
+                    //   child: widget.child,
+                    // ),
+                  ),
+                  //// ////////////////////////
+                  /// HAMBURGER MENU BTN
+                  Positioned(
+                    left: Insets.md,
+                    top: Insets.md,
+                    child: IconButton(
+                      onPressed: () {
+                        scaffoldKey.currentState?.openDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        size: 24,
+                        color: AppColors.accent1,
+                      ),
+                    ),
+                  ),
+
+                  //// /////////
+                  ///App Title
+                  if (isNarrow)
                     Padding(
-                      padding: EdgeInsets.only(
-                        top: topBarHeight + topBarPadding,
-                      ),
-                      child: MainScreen(
-                        child: widget.child,
-                      ),
-                    ),
-                    //// ////////////////////////
-                    /// HAMBURGER MENU BTN
-                    Positioned(
-                      left: Insets.md,
-                      top: Insets.md,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.menu,
-                          size: 24,
-                          color: AppColors.accent1,
-                        ),
-                      ),
-                    ),
-
-                    //// /////////
-                    ///App Title
-                    if (!isNarrow)
-                      Align(
+                      padding: EdgeInsets.only(top: Insets.lg),
+                      child: Align(
                         alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: Insets.lg,
-                          ),
-                          child: Text(
-                            AppStrings.appNameTxt,
-                            style: TextStyles.t2,
-                          ),
+                        child: Text(
+                          AppStrings.appNameTxt,
+                          style: TextStyles.t2,
                         ),
                       ),
+                    ),
 
-                    ////  //////////
-                    ///SEARCH BAR
-                    ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: topBarHeight),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.search,
-                          size: 24,
+                  ////  //////////
+                  ///SEARCH BAR
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: Insets.md,
+                      right: Insets.md,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: topBarHeight,
+                        ),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.search,
+                            color: AppColors.accent1,
+                            size: 24,
+                          ),
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -141,7 +160,7 @@ class _MainScreenScaffoldState extends State<MainScreenScaffold> {
             duration: Durations.medium,
             curve: Curves.easeOut,
             child: Visibility(
-              visible: !showDrawerPanel,
+              visible: showDrawerPanel,
               child: MainDrawerWidget(
                 compactMode: compactMenuMode,
                 onPressed: () {},

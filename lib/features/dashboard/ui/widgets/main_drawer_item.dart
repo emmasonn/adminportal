@@ -1,5 +1,6 @@
 import 'package:adminportal/core/helpers/spacer_widgets.dart';
 import 'package:adminportal/core/utils/enum_constants.dart';
+import 'package:adminportal/resources/app_colors.dart';
 import 'package:adminportal/resources/app_dimen.dart';
 import 'package:adminportal/resources/app_styles.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -14,7 +15,7 @@ class MainDrawerItem extends StatefulWidget {
   final bool compact;
   final bool transparent;
   final double height;
-  final MainDrawerPageTypes pageType;
+  final MainDrawerScreenTypes pageType;
   final bool dottedBorder;
 
   const MainDrawerItem(
@@ -27,7 +28,7 @@ class MainDrawerItem extends StatefulWidget {
     this.compact = false,
     this.transparent = false,
     this.height = 60,
-    this.pageType = MainDrawerPageTypes.none,
+    this.pageType = MainDrawerScreenTypes.none,
     this.dottedBorder = false,
   }) : super(key: key);
 
@@ -41,23 +42,34 @@ class _MainDrawerItemState extends State<MainDrawerItem> {
     Widget itemContent = AnimatedContainer(
       height: widget.height,
       duration: const Duration(milliseconds: 1000),
-      child: Row(
-        children: [
-          if (!widget.compact) hSpacer(20),
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: widget.icon,
-          ),
-          if (!widget.compact) ...{
-            hSpacer(16.0),
-            Expanded(
-              child: Text(
-                widget.label,
-                style: TextStyles.btnStyle,
-              ),
+      curve: Curves.easeOut,
+      child: AnimatedOpacity(
+        opacity: widget.isSelected ? 1 : .8,
+        duration: Durations.slow,
+        curve: Curves.easeOut,
+        child: Row(
+          mainAxisAlignment: widget.compact
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
+          children: [
+            if (!widget.compact) hSpacer(20),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: widget.icon,
             ),
-          }
-        ],
+            if (!widget.compact) ...{
+              hSpacer(16.0),
+              Expanded(
+                child: Text(
+                  widget.label.toUpperCase(),
+                  style: TextStyles.btnStyle.copyWith(
+                    color: AppColors.onAccent,
+                  ),
+                ),
+              ),
+            }
+          ],
+        ),
       ),
     );
 

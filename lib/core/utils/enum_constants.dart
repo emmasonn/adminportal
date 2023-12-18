@@ -1,8 +1,7 @@
 //drawer items
-enum MainDrawerPageTypes {
+enum MainDrawerScreenTypes {
   none,
   createContact,
   dashboard,
   contacts,
 }
-

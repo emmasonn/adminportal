@@ -131,7 +131,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               ),
                               onPressed: () {
                                 GoRouter.of(context)
-                                    .push(AppScreenPaths.dashboardPath);
+                                    .go(AppScreenPaths.dashboardPath);
                               },
                             ),
                           ),

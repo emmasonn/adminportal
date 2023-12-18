@@ -10,7 +10,7 @@ class MainDrawerWidget extends StatefulWidget {
   const MainDrawerWidget({
     super.key,
     this.onPressed,
-    required this.compactMode,
+    this.compactMode = false,
   });
   final bool compactMode;
   final Function()? onPressed;
@@ -22,6 +22,7 @@ class MainDrawerWidget extends StatefulWidget {
 class _MainDrawerWidgetState extends State<MainDrawerWidget> {
   double get _headerHeight => 106.0;
   double get _drawerItemHeight => 60.0;
+  double get _indicatorHeight => 48.0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,41 +34,47 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
         AnimatedContainer(
           height: _headerHeight,
           duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeOut,
           child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               //background Image
               Transform(
                 transform: Matrix4.diagonal3Values(1.0, 1.2, 1.0),
                 child: Container(
                   decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(Corners.lg),
+                    ),
                     color: theme.colorScheme.background,
                   ),
                 ),
               ),
               //App Name
-              Text(
-                AppStrings.appNameTxt,
-                style: TextStyles.appTitle,
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: Insets.sm,
+                ),
+                child: Text(
+                  AppStrings.appNameTxt,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.t1.copyWith(
+                    height: 1.2,
+                  ),
+                ),
               ),
             ],
           ),
         ),
         ///////////////////////
         ///MENU
-        Container(
-          width: 280,
-          padding: const EdgeInsets.only(
-            top: 10.0,
-            left: 10.0,
-            right: 10.0,
-            bottom: 20.0,
-          ),
+        Expanded(
           child: Stack(
             children: [
               /// Menu-Background
               Container(
-                color: AppColors.accent1,
                 decoration: const BoxDecoration(
+                  color: AppColors.accent1,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(Corners.md),
                   ),
@@ -75,34 +82,53 @@ class _MainDrawerWidgetState extends State<MainDrawerWidget> {
               ),
 
               ///Menu-buttons
-              Column(
-                children: [
-                  vSpacer(20.0),
-
-                  /// Dashboard btn
-                  MainDrawerItem(
-                    const Icon(Icons.dashboard, size: 20.0),
-                    AppStrings.dashboardTxt,
-                    height: _drawerItemHeight,
-                    compact: widget.compactMode,
-                    onPressed: () {
-                      widget.onPressed?.call();
-                    },
+              Container(
+                padding: EdgeInsets.all(Insets.lg),
+                constraints: const BoxConstraints(
+                  maxWidth: 280,
+                ),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(Corners.md),
                   ),
+                ),
+                child: Column(
+                  children: [
+                    vSpacer(Insets.lg),
 
-                  vSpacer(20.0),
+                    /// Dashboard btn
+                    MainDrawerItem(
+                      const Icon(
+                        Icons.dashboard,
+                        size: 20.0,
+                        color: AppColors.onAccent,
+                      ),
+                      AppStrings.dashboardTxt,
+                      height: _drawerItemHeight,
+                      compact: widget.compactMode,
+                      onPressed: () {
+                        widget.onPressed?.call();
+                      },
+                    ),
 
-                  /// Dashboard btn
-                  MainDrawerItem(
-                    const Icon(Icons.contact_page, size: 20.0),
-                    AppStrings.contactsTxt,
-                    height: _drawerItemHeight,
-                    compact: widget.compactMode,
-                    onPressed: () {
-                      widget.onPressed?.call();
-                    },
-                  ),
-                ],
+                    vSpacer(20.0),
+
+                    /// Dashboard btn
+                    MainDrawerItem(
+                      const Icon(
+                        Icons.contact_page,
+                        size: 20.0,
+                        color: AppColors.onAccent,
+                      ),
+                      AppStrings.contactsTxt,
+                      height: _drawerItemHeight,
+                      compact: widget.compactMode,
+                      onPressed: () {
+                        widget.onPressed?.call();
+                      },
+                    ),
+                  ],
+                ),
               )
             ],
           ),

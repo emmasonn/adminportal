@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 1), () {
         _logoAnimController.forward();
       });
       //navigate to auhentication screen after 3 seconds
